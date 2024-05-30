@@ -26,7 +26,7 @@
 ## 技术栈
 - Java 8
 - Spring Boot
-- Spring Security
+- Spring Security/Jwt
 - Thymeleaf
 - MySQL
 - Maven
