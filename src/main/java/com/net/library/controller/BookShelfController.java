@@ -1,10 +1,13 @@
 package com.net.library.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.net.library.pojo.BookShelf;
 import com.net.library.service.BookShelfService;
 import com.net.library.utils.AjaxResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,10 +23,15 @@ public class BookShelfController {
     @Autowired
     BookShelfService bookShelfService;
 
+    private static final Logger logger = LoggerFactory.getLogger(BookShelfController.class);
+
+
     @ApiOperation("列表查询")
     @PostMapping("/search")//将前端页面中的数据进行映射
     @ResponseBody//通过ajax把数据返回给前端
     public AjaxResult list(@RequestBody BookShelf bookShelf){
+        logger.info("do list,request=[{}]", JSON.toJSONString(bookShelf));
+
         List<BookShelf> bookShelves = bookShelfService.selectAll(bookShelf);
             return AjaxResult.success(bookShelves);
     }
@@ -31,6 +39,7 @@ public class BookShelfController {
     @ApiOperation("主键删除")
     @GetMapping("/delete/{id}")
     public String deleteById(@PathVariable("id") Long id){
+        logger.info("do deleteById,request=[{}]",id);
         int aLong = bookShelfService.deleteNoticeById(id);
          return "redirect:/system/shelf";
     }

@@ -1,11 +1,14 @@
 package com.net.library.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.net.library.pojo.BookNotice;
 import com.net.library.service.BookNoticeService;
 import com.net.library.utils.AjaxResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,10 +25,15 @@ public class BookNoticeController {
     @Autowired
     BookNoticeService bookNoticeService;
 
+    private static final Logger logger = LoggerFactory.getLogger(BookNoticeController.class);
+
+
     @ApiOperation("列表查询")
     @PostMapping("/search")
     @ResponseBody
     public AjaxResult list(@RequestBody BookNotice bookNotice){
+        logger.info("do listAll,request=[{}]", JSON.toJSONString(bookNotice));
+
         List<BookNotice> bookNotices = bookNoticeService.selectAll(bookNotice);
             return AjaxResult.success(bookNotices);
     }

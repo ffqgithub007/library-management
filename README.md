@@ -32,6 +32,7 @@
 - Maven
 - H2
 - Swagger
+- Logback
 
 
 ## 环境搭建
