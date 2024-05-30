@@ -49,3 +49,6 @@
 
 4.直接运行即可 
    启动类：com.net.library.LibraryManagementApplication
+   
+5.浏览器访问 
+    http://localhost:8080/index
