@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:include="include ::header('新增书架')"/>
+</head>
+<body>
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form th:action="@{/shelf/addPost}" method="post" class="form-horizontal">
+
+            <div class="row">
+                <label class="col-sm-3 control-label">ISBN:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="ISBN" placeholder="请输入"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">架层:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="shelf" placeholder="请输入"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">详细位置:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="bookPosition" placeholder="请输入"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3 control-label">
+                    <input type="submit" class="btn btn-primary" value="提交"></input>
+                </div>
+                <div class="col-sm-8" style="margin-top: 8px">
+                    <input type="button" class="btn" value="返回" onclick="history.back()"/>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</body>
+</html>

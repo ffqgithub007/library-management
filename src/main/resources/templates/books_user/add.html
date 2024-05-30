@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:include="include ::header('新增用户')"/>
+</head>
+<body>
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form th:action="@{/user/{action}(action=${action})}" method="post" class="form-horizontal">
+
+            <div class="row">
+                <label class="col-sm-3  control-label">工作编号:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="workId" placeholder="请输入"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">用户名称:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="userName" placeholder="请输入"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">登录名称:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="loginName" placeholder="请输入"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">登录密码:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="password" placeholder="请输入"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">登录类型:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="userType" placeholder="请输入"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">电子邮箱:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="email" placeholder="请输入"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">联系方式:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="phoneNumber" placeholder="请输入"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">性别:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="sex" placeholder="请输入"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">头像路径:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="avatar" placeholder="请输入"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">状态:</label>
+                <div class="col-sm-2">
+                    <select name="status" class="form-control">
+                        <option value="上线" >上线</option>
+                        <option value="下线" >下线</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3 control-label">
+                    <input type="submit" class="btn btn-primary" value="提交"/>
+                </div>
+                <div class="col-sm-8" style="margin-top: 8px">
+                    <input type="button" class="btn" value="返回" onclick="history.back()"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

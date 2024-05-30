@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:include="include :: header('新增书籍')"/>
+</head>
+<body>
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form th:action="@{/book/{action}(action=${action})}" method="post" class="form-horizontal m" id="form-book-add" >
+        <div class="row">
+            <label class="col-sm-3 control-label">ISBN:</label>
+            <div class="col-sm-8">
+                <input type="text" name="ISBN" placeholder="请输入"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">图书名称:</label>
+            <div class="col-sm-8">
+                <input type="text" name="bookName" placeholder="请输入"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">图书类型:</label>
+            <div class="col-sm-8" >
+                <input type="text" name="type" placeholder="请输入"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">图书出版社:</label>
+            <div class="col-sm-8">
+                <input type="text" name="publishingHouse" placeholder="请输入"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">作者:</label>
+            <div class="col-sm-8">
+                <input type="text" name="author" placeholder="请输入">
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">图书位置:</label>
+            <div class="col-sm-2">
+                <select name="shelf" class="form-control">
+                    <option  value="一号架">一号架</option>
+                    <option  value="二号架">二号架</option>
+                    <option  value="三号架">三号架</option>
+                    <option  value="四号架">四号架</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">图书图片:</label>
+            <div class="col-sm-8">
+                <input type="text" name="url" placeholder="请输入">
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">图书上架数量:</label>
+            <div class="col-sm-8">
+                <input type="text" name="number" placeholder="请输入"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">图书仓库量:</label>
+            <div class="col-sm-8">
+                <input type="text" name="numberJar" placeholder="请输入"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">状态:</label>
+            <div class="col-sm-2">
+                <select name="status" class="form-control">
+                    <option value="上线" >上线</option>
+                    <option value="下线" >下线</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-3 control-label">
+                <input type="submit" class="btn btn-primary" value="提交"/>
+            </div>
+            <div class="col-sm-8" style="margin-top: 8px">
+                <input type="button" class="btn" value="返回" onclick="history.back()"/>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script></script>
+</body>
+</html>

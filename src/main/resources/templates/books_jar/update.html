@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:include="include :: header('修改书籍')"/>
+</head>
+<body>
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form th:action="@{/book/{action}(action=${action})}" method="post" class="form-horizontal m" id="form-book-add">
+
+        <div class="row">
+<!--            <label class="col-sm-3 control-label">图书id</label>-->
+            <div class="col-sm-8"> <!--隐藏id-->
+                <input type="hidden" name="ISBN" placeholder="请输入" th:value="${books.ISBN}">
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label" >图书名称:</label>
+            <div class="col-sm-8">
+                <input type="text" name="bookName" placeholder="请输入" th:value="${books.bookName}" th:field="*{books.bookName}"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">图书类型:</label>
+            <div class="col-sm-8">
+                <input type="text" name="type" placeholder="请输入" th:value="${books.type}" th:field="*{books.type}"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">图书出版社:</label>
+            <div class="col-sm-8">
+                <input type="text" name="publishingHouse" placeholder="请输入" th:value="${books.publishingHouse}" th:field="*{books.publishingHouse}"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">作者:</label>
+            <div class="col-sm-8">
+                <input type="text" name="author" placeholder="请输入" th:value="${books.author}">
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">图书位置:</label>
+            <div class="col-sm-8">
+                <input type="text" name="shelf" placeholder="请输入" th:value="${books.shelf}">
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">图书图片:</label>
+            <div class="col-sm-8">
+                <input type="text" name="url" placeholder="请输入" th:value="${books.url}">
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">图书上架数量:</label>
+            <div class="col-sm-8">
+                <input type="text" name="number" placeholder="请输入" th:field="*{books.number}"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">图书仓库量:</label>
+            <div class="col-sm-8">
+                <input type="text" name="numberJar" placeholder="请输入" th:field="*{books.numberJar}"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3 control-label">状态:</label>
+            <div class="col-sm-2">
+                <select name="status" class="form-control" th:selected="${books.status}">
+                    <option name="上架" th:selected="${books.status} eq '上架'" >上架</option>
+                    <option name="下架" th:selected="${books.status} eq '下架'" >下架</option>
+                </select>
+            </div>
+        </div>
+<!--        <div class="row">-->
+<!--            <label class="col-sm-3 control-label">状态:</label>-->
+<!--            <div class="col-sm-8">-->
+<!--                <input type="text" name="status" th:value="${books.status}">-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <div class="row">
+            <div class="col-sm-3 control-label">
+                <input type="submit" class="btn btn-primary" value="提交"/>
+            </div>
+            <div class="col-sm-8" style="margin-top: 8px">
+                <input type="button" class="btn" value="返回" onclick="history.back()"/>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

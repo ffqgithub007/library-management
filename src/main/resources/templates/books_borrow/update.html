@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:include="include :: header('修改借阅管理')"/>
+</head>
+<body>
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form th:action="@{/borrow/{action}(action=${action})}" method="post" id="formID" class="form-horizontal m">
+
+            <div class="row">
+<!--                <label class="col-sm-3 control-label">读者:</label>-->
+                <div class="col-sm-8">
+                    <input type="hidden" name="id" id="id" th:value="${list.id}"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">ISBN码:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="ISBN" id="ISBN" th:value="${list.ISBN}"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">图书名称:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="bookName" th:value="${list.bookName}"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">读者姓名</label>
+                <div class="col-sm-8">
+                    <input type="text" name="userName" th:value="${list.userName}" th:field="*{list.userName}"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">性别</label>
+                <div class="col-sm-2">
+                    <select name="sex" class="form-control" th:selected="${list.sex}">
+                        <option name="男" th:selected="${list.sex} eq '男'" >男</option>
+                        <option name="女" th:selected="${list.sex} eq '女'" >女</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">联系方式</label>
+                <div class="col-sm-8">
+                    <input type="text" name="phone" th:value="${list.phone}"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">借阅天数</label>
+                <div class="col-sm-8">
+                    <input type="text" name="day" th:value="${list.day}"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">借书时间</label>
+                <div class="col-sm-8">
+                    <input type="text" name="borrowDate" th:value="${#dates.format(list.borrowDate,'yyyy-MM-dd')}"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">还书时间</label>
+                <div class="col-sm-8">
+                    <input type="text" name="returnDate" th:value="${#dates.format(list.returnDate,'yyyy-MM-dd')}"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">状态</label>
+                <div class="col-sm-2">
+                    <select name="status" class="form-control" th:selected="${list.status}">
+                        <option name="未还" th:selected="${list.status} eq '未还'">未还</option>
+                        <option name="已还" th:selected="${list.status} eq '已还'">已还</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                  <div class="col-sm-3 control-label">
+                      <input type="submit" class="btn btn-primary" value="提交">
+                  </div>
+                  <div class="col-sm-8"  style="margin-top: 8px">
+                      <input type="button" class="btn" value="返回" onclick="history.back()"/>
+                  </div>
+            </div>
+        </form>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <th:block th:include="include::header('图书列表')"/>
+</head>
+<body class="gray-bg">
+    <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+              <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label>ISBN码:</label>
+                            <input type="text" name="ISBN" id="ISBN" placeholder="请输入"/>
+                        </li>
+
+                        <li>
+                            <label>书名:</label>
+                            <input type="text" name="bookName" id="bookName" placeholder="请输入"/>
+                        </li>
+
+                        <li>
+                            <label>图书类型:</label>
+                            <select name="type">
+                                <option value=""></option>
+                                <option value="文艺类">文艺类</option>
+                                <option value="科学">科学</option>
+                                <option value="小说类">小说类</option>
+                                <option value="玄幻">玄幻</option>
+                                <option value="漫画类">漫画类</option>
+                            </select>
+                        </li>
+
+                        <li>
+                            <label>图书出版社:</label>
+                            <input type="text" name="publishingHouse" id="publishingHouse" placeholder="请输入"/>
+                        </li>
+
+                        <li>
+                               <label>状态:</label>
+                               <select  name="status" >
+                                   <option value=""></option>
+                                   <option value="上架">上架</option>
+                                   <option value="下架">下架</option>
+                                </select>
+                        </li>
+
+                          <li>
+                              <a class="btn btn-primary btn-rounded" onclick="searchs()"><i class="fa fa-search"></i>搜索</a>
+                              <a class="btn btn-warning btn-rounded" onclick="$.form.reset()"><i class="fa fa-refresh"></i>重置</a>
+                          </li>
+                    </ul>
+                </div>
+            </form>
+         </div>
+
+                 <div class="col-sm-12 search-collapse">
+
+                        <a class="btn btn-primary" th:href="@{/book/savePage}"><i class="fa fa-plus"></i>添加</a>
+
+                         <table class="table table-hover">
+                                <tr>
+                                    <th>ISBN</th>
+                                    <th>书名</th>
+                                    <th>图书类型</th>
+                                    <th>出版社</th>
+                                    <th>作者</th>
+                                    <th>位置</th>
+                                    <th>图书封面</th>
+                                    <th>上架数量</th>
+                                    <th>仓库量</th>
+                                    <th>状态</th>
+                                    <th>管理</th>
+                                </tr>
+                                <tbody class="tbody">
+                                <tr th:each="books : ${BookJr!=null ? BookJr:bookPages.getList()}">
+                                    <td th:text="${books.ISBN}"></td>
+                                    <td th:text="${books.bookName}"></td>
+                                    <td th:text="${books.type}"></td>
+                                    <td th:text="${books.publishingHouse}"></td>
+                                    <td th:text="${books.author}"></td>
+                                    <td th:text="${books.shelf}"></td>
+                                    <td th:text="${books.url}"></td>
+                                    <td th:text="${books.number}"></td>
+                                    <td th:text="${books.numberJar}"></td>
+                                    <td th:if="${books.status}==上架"  class="btn btn-primary" style="margin-top: 2px;">上架</td>
+                                    <td th:if="${books.status}==下架"  class="btn btn-default" style="margin-top: 2px;">下架</td>
+                                    <td>
+                                        <a class="btn btn-danger" th:href="@{/book/update/{id}(id=${books.ISBN})}">修改</a>
+                                        <a class="btn btn-danger" th:href="@{/book/delete/{id}(id=${books.ISBN})}">删除</a>
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                         </table>
+                     <div class="text-right">
+                         <p>当前第<span th:text="${bookPages.getPageNum()}"></span>页
+                             ,总<span th:text="${bookPages.pages}"></span>页,
+                             共<span th:text="${bookPages.total}"></span>条记录
+                             <a th:href="@{/system/main(pageNum=1,pageSize=5)}">首页</a>
+                             <a th:href="@{/system/main(pageNum = ${bookPages.getPrePage()} ? ${bookPages.getPageNum()}-1 : 1)}">上一页</a>
+                             <a th:href="@{/system/main(pageNum = ${bookPages.getNextPage()} ? ${bookPages.getPageNum()} + 1 : ${bookPages.total})}">下一页</a>
+                             <a th:href="@{/system/main(pageNum = ${bookPages.total})}">尾页</a></p>
+                     </div>
+                 </div>
+         </div>
+        </div>
+    </div>
+    <th:block th:include="include::footer"/>
+    <script th:inline="javascript">
+        let prefix="/book/";
+        // let prefixName="/book/namelike";
+        function searchs(){
+            //验证
+            let params={
+                "isbn" :$("#ISBN").val(),
+                "bookName":$("#bookName").val(),
+                "type":$("select[name='type']").val(),
+                "publishingHouse":$("#publishingHouse").val(),
+                "status":$("select[name='status']").val()
+            };
+            $.ajax({
+                type:"POST",
+                url: prefix +"list",
+                data:JSON.stringify(params),
+                contentType:'application/json',
+                dataType:'json',
+                cache :false,
+                async:true,
+                success:function (ret){
+                    let book_html=getTableHtml(ret.data);
+                    $(".tbody").empty();
+                    $(".tbody").html(book_html);
+                }
+            })
+        }
+        function getTableHtml(books){
+            let rows='';
+            for (let i = 0; i <books.length; i++) {
+                let row=`<tr>
+                        <td>${books[i].isbn}</td>
+                        <td>${books[i].bookName}</td>
+                        <td>${books[i].type}</td>
+                        <td>${books[i].publishingHouse}</td>
+                        <td>${books[i].author}</td>
+                        <td>${books[i].shelf}</td>
+                        <td>${books[i].url}</td>
+                        <td>${books[i].number}</td>
+                        <td>${books[i].numberJar}</td>
+                        <td class="btn btn-default" style="margin-top: 2px">${books[i].status}</td>
+                        <td>
+                             <a class="btn btn-danger" href="/book/update/${books[i].isbn}">修改</a>
+                             <a class="btn btn-danger" href="/book/delete/${books[i].isbn}">删除</a>
+                        </td>
+                        </tr>`
+                rows+=row;
+            }
+            return rows;
+        }
+
+    </script>
+</body>
+</html>

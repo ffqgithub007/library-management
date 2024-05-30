@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.net.library.mapper.BookBorrowMapper">
+    <resultMap id="BooksResult" type="BookBorrow">
+        <result column="user_id" property="userId"/>
+        <result column="user_Name" property="userName"/>
+        <result column="book_name" property="bookName"/>
+        <result column="borrow_date" property="borrowDate"/>
+        <result column="return_date" property="returnDate"/>
+        <result column="borrow_ifFlag" property="borrowIfFlag"/>
+        <result column="return_ifFlag" property="returnIfFlag"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+    <sql id="selectBookVo">
+        select * from book_borrow
+    </sql>
+
+    <select id="selectAllList" parameterType="BookBorrow" resultMap="BooksResult">
+        <include refid="selectBookVo"></include>
+        where del_flag='0'
+            <if test="ISBN != null and ISBN !=''">and ISBN=#{ISBN}</if>
+            <if test="userId !=null and userId !=''">and user_id=#{userId}</if>
+            <if test="status !=null and status !=''">and status=#{status}</if>
+    </select>
+
+    <select id="selectId" parameterType="Long" resultMap="BooksResult">
+        <include refid="selectBookVo"></include>
+        where del_flag='0' and id=#{id}
+    </select>
+
+    <update id="deleteById" parameterType="Long">
+        update book_borrow  set del_flag = '1' where id=#{id}
+    </update>
+
+    <update id="updateByID" parameterType="BookBorrow">
+        update book_borrow
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="id !=null">id=#{id},</if>
+            <if test="ISBN !=null"> ISBN=#{ISBN},</if>
+            <if test="userName !=null">user_name=#{userName},</if>
+            <if test="bookName !=null">book_name=#{bookName},</if>
+            <if test="sex !=null">sex=#{sex},</if>
+            <if test="phone !=null">phone=#{phone},</if>
+            <if test="day !=null" >day=#{day},</if>
+            <if test="borrowDate !=null">borrow_date=#{borrowDate},</if>
+            <if test="returnDate !=null">return_date=#{returnDate},</if>
+            <if test="borrowIfFlag !=null">borrow_ifFlag=#{borrowIfFlag},</if>
+            <if test="returnIfFlag !=null">return_ifFlag=#{returnIfFlag},</if>
+            <if test="status !=null">status=#{status}</if>
+        </trim>
+            where id=#{id}
+    </update>
+
+    <insert id="save" parameterType="BookBorrow">
+        insert into book_borrow
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ISBN !=null">ISBN,</if>
+            <if test="userId !=null">user_id,</if>
+            <if test="userName !=null">user_name,</if>
+            <if test="bookName !=null">book_name,</if>
+            <if test="sex !=null">sex,</if>
+            <if test="phone !=null">phone,</if>
+            <if test="day !=null" >day,</if>
+            <if test="borrowDate !=null">borrow_date,</if>
+            <if test="returnDate !=null">return_date,</if>
+            <if test="borrowIfFlag !=null">borrow_ifFlag,</if>
+            <if test="returnIfFlag !=null">return_ifFlag,</if>
+            <if test="status !=null">status</if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="ISBN !=null"> #{ISBN},</if>
+            <if test="userId !=null">#{userId},</if>
+            <if test="userName !=null">#{userName},</if>
+            <if test="bookName !=null">#{bookName},</if>
+            <if test="sex !=null">#{sex},</if>
+            <if test="phone !=null">#{phone},</if>
+            <if test="day !=null" >#{day},</if>
+            <if test="borrowDate !=null">#{borrowDate},</if>
+            <if test="returnDate !=null">#{returnDate},</if>
+            <if test="borrowIfFlag !=null">#{borrowIfFlag},</if>
+            <if test="returnIfFlag !=null">#{returnIfFlag},</if>
+            <if test="status !=null">#{status}</if>
+        </trim>
+    </insert>
+
+</mapper>

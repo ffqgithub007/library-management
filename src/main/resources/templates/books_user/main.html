@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:include="include::header('用户列表')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+        <form id="formId">
+             <div class="select-list">
+                <ul>
+                    <li>
+                        <label>工作编号:</label>
+                        <input type="text" name="workId" id="workId" placeholder="请输入"/>
+                    </li>
+                </ul>
+                 <ul>
+                     <li>
+                         <label>用户名称:</label>
+                         <input type="text" name="loginName" id="userName" placeholder="请输入"/>
+                     </li>
+                 </ul>
+                 <ul>
+                     <li>
+                         <label>类型:</label>
+                         <input type="text" name="userType" id="userType" placeholder="请输入"/>
+
+                     </li>
+                 </ul>
+                 <ul>
+                     <li>
+                         <label>状态:</label>
+                         <input type="text" name="status" id="status" placeholder="请输入">
+                     </li>
+                 </ul>
+                <ul>
+                    <li>
+                        <a class="btn btn-primary btn-rounded" onclick="searche()"><i class="fa fa-search"></i>搜索</a>
+                        <a class="btn btn-warning btn-rounded" onclick="$.form.reset()"><i class="fa fa-refresh"></i>重置</a>
+                    </li>
+                </ul>
+            </div>
+        </form>
+      </div>
+            <div class="col-sm-12 search-collapse">
+<!--                <div class="btn-group-sm">-->
+                    <a class="btn btn-primary" th:href="@{/user/add}"><i class="fa fa-plus"></i>添加</a>
+<!--                </div>-->
+                <table class="table table-hover">
+                    <tr>
+                        <th>工作编号</th>
+                        <th>用户名称</th>
+                        <th>登录名称</th>
+                        <th>登录密码</th>
+                        <th>登录类型</th>
+                        <th>电子邮箱</th>
+                        <th>联系方式</th>
+                        <th>性别</th>
+                        <th>头像路径</th>
+                        <th>创建时间</th>
+                        <th>状态</th>
+                        <th>管理</th>
+                    </tr>
+                    <tbody class="tbody">
+                        <tr th:each="user:${users.getList()}">
+                            <td th:text="${user.workId}"></td>
+                            <td th:text="${user.userName}"></td>
+                            <td th:text="${user.loginName}"></td>
+                            <td th:text="${user.password}"></td>
+                            <td th:text="${user.userType}"></td>
+                            <td th:text="${user.email}"></td>
+                            <td th:text="${user.phoneNumber}"></td>
+                            <td th:text="${user.sex}"></td>
+                            <td th:text="${user.avatar}"></td>
+                            <td th:text="${#dates.format(user.createTime,'yyyy-MM-dd')}"></td>
+                            <td th:if="${user.status}==在线" class="btn btn-primary" style="margin-top: 2px">在线</td>
+                            <td th:if="${user.status}==下线" class="btn btn-default" style="margin-top: 2px">下线</td>
+                            <td>
+                                <a class="btn btn-danger" th:href="@{/user/update/{id}(id=${user.id})}">修改</a>
+                                <a class="btn btn-danger" th:href="@{/user/delete/{id}(id=${user.id})}">删除</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-right" id="page">
+                    <p>当前第 <span th:text="${users.getPageNum()}"></span>页
+                    ,总<span th:text="${users.pages}"></span>页，
+                        共 <span th:text="${users.total}"></span>条记录
+                        <a th:href="@{/system/user(pageNum=1,pageSize=5)}">首页</a>
+                        <a th:href="@{/system/user(pageNum=${users.getPrePage()})}">上一页</a>
+                        <a th:href="@{/system/user(pageNum=${users.getNextPage()} ? ${users.getPageNum()}+1:${users.total} )}">下一页</a>
+                        <a th:href="@{/system/user(pageNum=${users.pages})}">尾页</a>
+                    </p>
+                </div>
+            </div>
+    </div>
+</div>
+    <th:block th:include="include::footer"/>
+<script>
+    let prefix="/user/";
+    function searche(){
+        let params={
+            "workId":$("#workId").val() ,
+            "userName":$("#userName").val(),
+            "userType":$("#userType").val(),
+            "status" : $("#status").val()
+        }
+
+        $.ajax({
+            type:"POST",
+            url:prefix+"list",
+            data: JSON.stringify(params),
+            contentType:'application/json',//要求为String类型的参数，当发送信息至服务器时，内容编码类型默认为"application/x-www-form-urlencoded"。该默认值适合大多数应用场合。
+            dataType:'json',//要求为String类型的参数，预期服务器返回的数据类型
+            success:function (reg){
+                let user_html=getTableHtml(reg.data.list);
+                $(".tbody").empty();
+                $(".tbody").html(user_html);
+
+                $("#page").empty();
+                // $("#page").html(page_html);
+            }
+        })
+    }
+    function getTableHtml(users){
+        let rows='';
+        for (let i=0;i<users.length;i++){
+            let row=`
+                <tr>
+                <td>${users[i].workId}</td>
+                <td>${users[i].userName}</td>
+                <td>${users[i].loginName}</td>
+                <td>${users[i].password}</td>
+                <td>${users[i].userType}</td>
+                <td>${users[i].email}</td>
+                <td>${users[i].phoneNumber}</td>
+                <td>${users[i].sex}</td>
+                <td>${users[i].avatar}</td>
+                <td>${users[i].createTime}</td>
+                <td class="btn btn-default" style="margin-top: 2px">${users[i].status}</td>
+                <td>
+                <a  class="btn btn-danger" href="@{/user/update/${users[i].id}}">修改</a>
+                <a  class="btn btn-danger" href="@{/user/delete/${users[i].id}}">删除</a>
+                </td>
+                </tr>
+            `
+            rows+=row;
+        }
+         return rows;
+    }
+</script>
+</body>
+</html>

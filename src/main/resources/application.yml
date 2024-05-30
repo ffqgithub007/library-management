@@ -1,0 +1,27 @@
+# 数据源配置
+spring:
+  profiles:
+      active: dev #开发环境
+
+# MyBatis
+mybatis:
+  # 搜索指定包别名
+  type-aliases-package: com.net.library.pojo
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  # 热部署
+  devtools:
+    restart:
+      # 热部署开启
+      enabled: true
+
+#分页pageHelper
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+
+# Swagger配置
+swagger:
+  # 是否开启swagger
+  enabled: true

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:include="include ::header('新增公告')"/>
+</head>
+<body>
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form th:action="@{/notice/addPost}" method="post" class="form-horizontal">
+
+            <div class="row">
+                <label class="col-sm-3 control-label">标题:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="title" placeholder="请输入"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">公告作者:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="author" placeholder="不输入 默认为皇家牛号"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3 control-label">公告内容:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="content" placeholder="请输入"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3 control-label">
+                    <input type="submit" class="btn btn-primary" value="提交"></input>
+                </div>
+                <div class="col-sm-8" style="margin-top: 8px">
+                    <input type="button" class="btn" value="返回" onclick="history.back()"/>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</body>
+</html>

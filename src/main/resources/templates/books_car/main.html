@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:include="include::header('卡列表')"/>
+</head>
+<body class="gray-bg">
+    <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>卡编号:</label>
+                                <input type="text" name="cardId" id="cardId" placeholder="请输入"/>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <label>用户名称:</label>
+                                <input type="text" name="name" id="name" placeholder="请输入"/>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <a class="btn btn-primary btn-rounded" onclick="searchss()"><i class="fa fa-search"></i>搜索</a>
+                                <a class="btn btn-warning btn-rounded" onclick="$.form.reset()"><i class="fa fa-refresh"></i>重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+                    <div class="col-sm-12 search-collapse">
+<!--&lt;!&ndash;                        <div class="btn-group-sm">&ndash;&gt;  get请求-->
+                            <a class="btn btn-primary" th:href="@{/card/add}"><i class="fa fa-plus"></i>添加</a>
+<!--                        </div>-->
+
+                        <table class="table table-hover">
+                            <tr>
+                                <th>卡编号</th>
+                                <th>用户名称</th>
+                                <th>借书标识</th>
+                                <th>操作</th>
+                            </tr>
+                            <tbody class="tbody">
+                                <tr th:each="card:${cards.getList()}">
+                                    <td th:text="${card.cardId}"></td>
+                                    <td th:text="${card.name}"></td>
+                                    <td th:text="${card.lendFlag}"></td>
+                                    <td>
+                                        <a class="btn btn-danger" th:href="@{/card/update/{id}(id=${card.id})}">修改</a>
+                                        <a class="btn btn-danger" th:href="@{/card/delete/{id}(id=${card.id})}">删除</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-right">
+                            <p>当前第<span th:text="${cards.getPageNum()}"></span>页
+                            ，总<span th:text="${cards.pages}"></span>页,
+                              共<span th:text="${cards.total}"></span>条记录
+                                <a th:href="@{/system/card(pageNum=1,pageSize=5)}">首页</a>
+                                <a th:href="@{/system/card(pageNum=${cards.getPrePage()} ? ${cards.getPageNum()}-1 : 1)}">上一页</a>
+                                <a th:href="@{/system/card(pageNum=${cards.getNextPage()} ? ${cards.getPageNum()} +1 : ${cards.total})}">下一页</a>
+                                <a th:href="@{/system/card(pageNum=${cards.pages})}">尾页</a>
+                            </p>
+                        </div>
+                    </div>
+        </div>
+
+    </div>
+    <th:block th:include="include::footer"/>
+<script>
+
+    let prefix="/card/search"
+    function searchss(){
+        let params={
+            'cardId' : $("#cardId").val(),
+            'name': $("#name").val(),
+        }
+        $.ajax({
+            type:"POST",
+            url:prefix,
+            data:JSON.stringify(params),
+            contentType:'application/json',//要求为String类型的参数，当发送信息至服务器时，内容编码类型默认为"application/x-www-form-urlencoded"。该默认值适合大多数应用场合。
+            dataType:'json',//要求为String类型的参数，预期服务器返回的数据类型
+            success : function (ret){
+                let notice_html=getTableHtml(ret.data);
+                $(".tbody").empty();
+                $(".tbody").html(notice_html);
+            }
+        })
+    }
+    function getTableHtml(card){
+        let rows=''
+        for (let i=0;i<card.length;i++){
+            let ros=`<tr
+                <td></td>
+                <td>${card[i].cardId}</td>
+                <td>${card[i].name}</td>
+                <td>${card[i].lendFlag}</td>
+                <td>
+                   <a class="btn btn-danger" href="@{/card/update/${card[i].id}}">修改</a>
+                   <a class="btn btn-danger" href="@{/card/delete/${card[i].id}}">删除</a>
+                 </td>
+            </tr>
+            `
+            rows+=ros;
+        }
+        return rows;
+    }
+</script>
+</body>
+</html>

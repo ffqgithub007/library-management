@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:include="include::header('借阅列表')"/>
+</head>
+<body class="gray-bg">
+    <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>ISBN码:</label>
+                                <input type="text" name="ISBN" id="ISBN" placeholder="请输入"/>
+                            </li>
+
+                            <li>
+                                <label>读者编码:</label>
+                                <input type="text" name="userId" id="userId" placeholder="请输入"/>
+                            </li>
+
+                            <li>
+                                <label>状态:</label>
+                                <input type="text" name="status" id="status" placeholder="请输入"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded" onclick="searchesa()"><i class="fa fa-search"></i>搜索</a>
+                                <a class="btn btn-warning btn-rounded" onclick="$.form.reset()"><i class="fa fa-refresh"></i>重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-12 search-collapse">
+
+                <a class="btn btn-primary" th:href="@{/borrow/addUser}"><i class="fa fa-plus"></i> 借书</a>
+<!--                <a class="btn btn-primary" th:href="@{/system/borrow}">返回</a>-->
+                <table class="table table-hover">
+                    <tr>
+                        <th>读者编码</th>
+                        <th>ISBN码</th>
+                        <th>图书名称</th>
+                        <th>读者姓名</th>
+                        <th>性别</th>
+                        <th>联系方式</th>
+                        <th>借阅天数</th>
+                        <th>借书时间</th>
+                        <th>还书时间</th>
+                        <th>状态</th>
+                        <th>管理</th>
+                    </tr>
+                <tbody class="tbody">
+                    <tr th:each="borrows:${borrowPages.getList()}">
+                        <th th:text="${borrows.userId}"></th>
+                        <th th:text="${borrows.ISBN}"></th>
+                        <th th:text="${borrows.bookName}"></th>
+                        <th th:text="${borrows.userName}"></th>
+                        <th th:text="${borrows.sex}"></th>
+                        <th th:text="${borrows.phone}"></th>
+                        <th th:text="${borrows.day}"></th>
+                        <th th:text="${#dates.format(borrows.borrowDate,'yyyy-MM-dd')}"></th>
+                        <th th:text="${#dates.format(borrows.returnDate,'yyyy-MM-dd')}"></th>
+                        <th th:if="${borrows.status}==未还"  class="btn btn-danger" style="margin-top: 2px;">未还</th>
+                        <th th:if="${borrows.status}==已还"  class="btn btn-default" style="margin-top: 2px;">已还</th>
+                        <th>
+                            <a class="btn btn-danger"  th:href="@{/borrow/update/{id}(id=${borrows.id})}">修改</a>
+                            <a class="btn btn-danger"  th:href="@{/borrow/delete/{id}(id=${borrows.id})}">删除</a>
+                        </th>
+                    </tr>
+                </tbody>
+                </table>
+            <div class="text-right">
+                <p>当前第<span th:text="${borrowPages.getPageNum}"></span>页数,总<span th:text="${borrowPages.pages}"></span>页
+                    共<span th:text="${borrowPages.total}"></span>条记录
+                    <a th:href="@{/system/borrow(pageNum=1,pageSize=5)}">首页</a>
+                    <a th:href="@{/system/borrow(pageNum= ${borrowPages.getPrePage()} ? ${borrowPages.getPageNum()}-1:1)}">上一页</a>
+                    <a th:href="@{/system/borrow(pageNum= ${borrowPages.getNextPage()}? ${borrowPages.getPageNum()}+1:${borrowPages.total})}">下一页</a>
+                    <a th:href="@{/system/borrow(pageNum= ${borrowPages.total})}">尾页</a>
+                </p>
+            </div>
+            </div>
+        </div>
+    </div>
+
+<th:block th:include="include::footer"/>
+    <script th:inline="javascript">
+        let prefix="/borrow/";
+        function searchesa(){
+            let params={
+                "isbn":$("#ISBN").val(),
+                "userId":$("#userId").val(),
+                "status":$("#status").val()
+            };
+            $.ajax({
+                type:"POST",
+                url:prefix+"list",
+                data: JSON.stringify(params),
+                dataType:"json",//预期服务器返回的类型
+                async:true,//异步请求开启
+                contentType:"application/json",
+                success:function (ret){
+                    let book_html=getTableHtml(ret.data);
+                    $(".tbody").empty();
+                    $(".tbody").html(book_html);
+                }
+            })
+        }
+       function getTableHtml(borrows){
+            let rows='';
+                for(let i=0;i<borrows.length;i++){
+                    let row=`<tr>
+                                <th>${borrows[i].userId}</th>
+                                <th>${borrows[i].isbn}</th>
+                                <th>${borrows[i].bookName}</th>
+                                <th>${borrows[i].userName}</th>
+                                <th>${borrows[i].sex}</th>
+                                <th>${borrows[i].phone}</th>
+                                <th>${borrows[i].day}</th>
+                                <th>${borrows[i].borrowDate}</th>
+                                <th>${borrows[i].returnDate}</th>
+                                <th class="btn btn-default">${borrows[i].status}</th>
+                                <th>
+                                <a class="btn btn-danger" href="/borrow/update/${borrows[i].id}">修改</a>
+                                <a class="btn btn-danger" href="/borrow/delete/${borrows[i].id}">删除</a>
+
+                                </th>
+                            </tr>`
+                    rows+=row;
+                }
+                return rows;
+       }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.net.library.mapper.BookShelfMapper">
+
+    <resultMap id="ShelfResult" type="BookShelf">
+        <result property="id" column="id"/>
+        <result property="bookPosition" column="book_position"/>
+    </resultMap>
+
+    <sql id="selectShelfVO">
+        select * from book_shelf
+    </sql>
+
+    <select id="selectAll" parameterType="BookShelf" resultMap="ShelfResult">
+        <include refid="selectShelfVO"></include>
+            where del_flag='0'
+        <if test="ISBN !=null and ISBN!=''">and ISBN=#{ISBN}</if>
+        <if test="shelf!=null and shelf!=''">and shelf=#{shelf}</if>
+    </select>
+
+    <select id="findShelfById" parameterType="BookShelf" resultMap="ShelfResult">
+        <include refid="selectShelfVO"></include>
+            where id=#{id}
+    </select>
+
+    <insert id="insertAll" parameterType="BookShelf">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="ISBN!=null">ISBN,</if>
+                <if test="shelf!=''">shelf,</if>
+                <if test="bookPosition!=null">book_position,</if>
+            </trim>
+            <trim prefix="values(" suffix=")" suffixOverrides=",">
+               <if test="ISBN!=null">#{ISBN},</if>
+               <if test="shelf!=''">#{shelf},</if>
+               <if test="bookPosition!=null">#{bookPosition},</if>
+            </trim>
+    </insert>
+
+    <update id="updateShelf" parameterType="BookShelf">
+        update book_shelf
+            <trim prefix="set" suffixOverrides=",">
+                <if test="ISBN!=null">ISBN=#{ISBN},</if>
+                <if test="shelf!=null">shelf=#{shelf},</if>
+                <if test="bookPosition!=null">book_position=#{bookPosition},</if>
+            </trim>
+           where id=#{id}
+    </update>
+
+    <update id="deleteNoticeById" parameterType="Long">
+        update book_shelf set del_flag='1' where id=#{id}
+    </update>
+<!--    //假删除-->
+
+</mapper>

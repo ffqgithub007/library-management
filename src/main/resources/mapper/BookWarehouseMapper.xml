@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.net.library.mapper.BookWarehouseMapper">
+    <resultMap id="BooksResult" type="BookWarehouse">
+        <result property="id"  column="id"/>
+        <result property="bookName" column="book_name"/>
+        <result property="type" column="type"/>
+        <result property="publishingHouse" column="publishing_house"/>
+        <result property="url" column="url"/>
+        <result property="numberJar" column="number_jar"/>
+        <result property="number" column ="number"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <sql id="selectBookVo">
+        select * from book_warehouse
+    </sql>
+
+<!--    查询所有的图书-->
+    <select id="selectBooksList" parameterType="BookWarehouse" resultMap="BooksResult">
+        <include refid="selectBookVo"/>
+            where del_flag='0'
+         <if test="ISBN !=null and ISBN !=''"> and ISBN=#{ISBN}</if>
+         <if test="bookName !=null and bookName !=''">and book_name like concat('%',#{bookName},'%')</if>
+         <if test="type !=null and type !=''">and type=#{type}</if>
+         <if test="publishingHouse !=null and publishingHouse !=''">and publishing_house like concat('%',#{publishingHouse},'%')</if>
+         <if test="status !=null and status !=''">and status=#{status}</if>
+    </select>
+
+
+    <select id="selectBookById" parameterType="BookWarehouse" resultMap="BooksResult">
+        <include refid="selectBookVo"/>
+        where  ISBN=#{ISBN} and del_flag='0'
+    </select>
+
+<!--    <insert id="insertBook" parameterType="BookJr">-->
+<!--        insert into book_warehouse (storeHouse_id,book_name,type) values(#{storeHouseId},#{bookName},#{type})-->
+<!--    </insert>-->
+    <insert id="insertBook" parameterType="BookWarehouse" useGeneratedKeys="false">
+        insert into book_warehouse
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ISBN !=null">ISBN,</if>
+            <if test="bookName !=null" >book_name,</if>
+            <if test="type !=null">type,</if>
+            <if test="publishingHouse !=null">publishing_house,</if>
+            <if test="author !=null">author,</if>
+            <if test="shelf !=null">shelf,</if>
+            <if test="url !=null">url,</if>
+            <if test="number !=null">number,</if>
+            <if test="numberJar !=null">number_jar,</if>
+            <if test="status !=null">status,</if>
+            <if test="delFlag !=null">del_flag</if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="ISBN !=null">#{ISBN},</if>
+            <if test="bookName !=null">#{bookName},</if>
+            <if test="type !=null">#{type},</if>
+            <if test="publishingHouse !=null">#{publishingHouse},</if>
+            <if test="author !=null">#{author},</if>
+            <if test="shelf !=null">#{shelf},</if>
+            <if test="url !=null">#{url},</if>
+            <if test="number !=null">#{number},</if>
+            <if test="numberJar !=null">#{numberJar},</if>
+            <if test="status !=null">status,</if>
+            <if test="delFlag !=null">del_flag</if>
+        </trim>
+    </insert>
+
+    <update id="updateBook" parameterType="BookWarehouse">
+        update book_warehouse
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ISBN !=null">ISBN=#{ISBN},</if>
+            <if test="bookName !=null">book_name=#{bookName},</if>
+            <if test="type !=null"> type=#{type},</if>
+            <if test="publishingHouse !=null">publishing_house=#{publishingHouse},</if>
+            <if test="author !=null">author=#{author},</if>
+            <if test="shelf !=null">shelf=#{shelf},</if>
+            <if test="url !=null">url=#{url},</if>
+            <if test="number !=null">number=#{number},</if>
+            <if test="numberJar !=null">number_jar=#{numberJar},</if>
+            <if test="status !=null">status=#{status},</if>
+        </trim>
+            where ISBN=#{ISBN}
+    </update>
+
+    <update id="deleteBookById" parameterType="String">
+        update book_warehouse set del_flag='1' where ISBN=#{ISBN}
+    </update>
+<!--    <delete id="deleteBookById" parameterType="int">-->
+<!--        delete from book_warehouse where storeHouse_id=#{storeHouseId}-->
+<!--    </delete>-->
+
+    <delete id="deleteBookByIds" parameterType="String">
+        delete from book_warehouse where storeHouse_id in
+        <foreach item="storeHouseId" collection="array" open="(" separator="," close=")">
+            #{ISBN}
+        </foreach>
+    </delete>
+
+    <delete id="deleteDelBookByIds" parameterType="String">
+        update book_warehouse set del_flag='2' where ISBN in
+        <foreach item="storeHouse_id" collection="array" open="(" separator="," close=")">
+            #{ISBN}
+        </foreach>
+    </delete>
+
+</mapper>

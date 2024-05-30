@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.net.library.mapper.BookCardMapper">
+    <resultMap id="CardsResult" type="BookCard">
+        <result column="card_id" property="cardId"/>
+        <result column="lend_flag" property="lendFlag"/>
+    </resultMap>
+
+    <sql id="selectBookVo">
+        select * from book_card
+    </sql>
+
+    <select id="selectAllList" parameterType="BookCard" resultMap="CardsResult">
+        <include refid="selectBookVo"></include>
+        where del_flag='0'
+            <if test="cardId != null and cardId !=''">and card_id=#{cardId}</if>
+            <if test="name !=null and name !=''">and name=#{name}</if>
+    </select>
+
+    <select id="selectId" parameterType="Long" resultMap="CardsResult">
+        <include refid="selectBookVo"></include>
+        where del_flag='0' and id=#{id}
+    </select>
+
+    <update id="deleteById" parameterType="Long">
+        update  book_card set del_flag = '1' where id=#{id}
+    </update>
+
+    <update id="updateByID" parameterType="BookCard">
+        update book_card
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="id !=null">id=#{id},</if>
+            <if test="cardId !=null"> card_id=#{cardId},</if>
+            <if test="name !=null">name=#{name},</if>
+            <if test="lendFlag !=null">lend_flag=#{lendFlag},</if>
+        </trim>
+            where id=#{id}
+    </update>
+
+    <insert id="save" parameterType="BookCard">
+        insert into book_card
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id !=null">id,</if>
+            <if test="cardId !=null">card_id,</if>
+            <if test="name !=null">name,</if>
+            <if test="lendFlag !=null">lend_flag,</if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="id !=null"> #{id},</if>
+            <if test="cardId !=null">#{cardId},</if>
+            <if test="name !=null">#{name},</if>
+            <if test="lendFlag !=null">#{lendFlag},</if>
+
+        </trim>
+    </insert>
+
+</mapper>

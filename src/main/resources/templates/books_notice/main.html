@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:include="include::header('公告列表')"/>
+</head>
+<body class="gray-bg">
+    <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>公告标题:</label>
+                                <input type="text" name="title" id="title" placeholder="请输入"/>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <label>公告作者:</label>
+                                <input type="text" name="author" id="author" placeholder="请输入"/>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <a class="btn btn-primary btn-rounded" onclick="searchss()"><i class="fa fa-search"></i>搜索</a>
+                                <a class="btn btn-warning btn-rounded" onclick="$.form.reset()"><i class="fa fa-refresh"></i>重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+                    <div class="col-sm-12 search-collapse">
+<!--                        <div class="btn-group-sm">-->
+                            <a class="btn btn-primary" th:href="@{/notice/add}"><i class="fa fa-plus"></i>添加</a>
+<!--                        </div>-->
+
+                        <table class="table table-hover">
+                            <tr>
+                                <th>公告标题</th>
+                                <th>公告作者</th>
+                                <th>公告内容</th>
+                                <th>发布时间</th>
+                                <th>操作</th>
+                            </tr>
+                            <tbody class="tbody">
+                                <tr th:each="notives:${notice.getList()}">
+                                    <td th:text="${notives.title}"></td>
+                                    <td th:text="${notives.author}"></td>
+                                    <td th:text="${notives.content}"></td>
+                                    <td th:text="${#dates.format(notives.createTime,'yyyy-MM-dd')}"></td>
+                                    <td>
+                                        <a class="btn btn-danger" th:href="@{/notice/update/{id}(id=${notives.id})}">修改</a>
+                                        <a class="btn btn-danger" th:href="@{/notice/delete/{id}(id=${notives.id})}">删除</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-right">
+                            <p>当前第<span th:text="${notice.getPageNum()}"></span>页
+                            ，总<span th:text="${notice.pages}"></span>页,
+                              共<span th:text="${notice.total}"></span>条记录
+                                <a th:href="@{/system/notice(pageNum=1,pageSize=5)}">首页</a>
+                                <a th:href="@{/system/notice(pageNum=${notice.getPrePage()} ? ${notice.getPageNum()}-1 : 1)}">上一页</a>
+                                <a th:href="@{/system/notice(pageNum=${notice.getNextPage()} ? ${notice.getPageNum()} +1 : ${notice.total})}">下一页</a>
+                                <a th:href="@{/system/notice(pageNum=${notice.pages})}">尾页</a>
+                            </p>
+                        </div>
+                    </div>
+        </div>
+
+    </div>
+    <th:block th:include="include::footer"/>
+<script>
+
+    let prefix="/notice/search"
+    function searchss(){
+        let params={
+            'title' : $("#title").val(),
+            'author': $("#author").val(),
+        }
+        $.ajax({
+            type:"POST",
+            url:prefix,
+            data:JSON.stringify(params),
+            contentType:'application/json',//要求为String类型的参数，当发送信息至服务器时，内容编码类型默认为"application/x-www-form-urlencoded"。该默认值适合大多数应用场合。
+            dataType:'json',//要求为String类型的参数，预期服务器返回的数据类型
+            success : function (ret){
+                let notice_html=getTableHtml(ret.data);
+                $(".tbody").empty();
+                $(".tbody").html(notice_html);
+            }
+        })
+    }
+    function getTableHtml(notice){
+        let rows=''
+        for (let i=0;i<notice.length;i++){
+            let ros=`<tr
+                <td></td>
+                <td>${notice[i].title}</td>
+                <td>${notice[i].author}</td>
+                <td>${notice[i].content}</td>
+                <td>${notice[i].createTime}</td>
+                <td>
+                   <a class="btn btn-danger" href="@{/notice/update/${notice[i].id}}">修改</a>
+                   <a class="btn btn-danger" href="@{/notice/delete/${notice[i].id}}">删除</a>
+                 </td>
+            </tr>
+            `
+            rows+=ros;
+        }
+        return rows;
+    }
+</script>
+</body>
+</html>

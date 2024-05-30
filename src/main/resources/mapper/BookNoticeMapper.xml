@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.net.library.mapper.BookNoticeMapper">
+
+    <resultMap id="NoticeResult" type="BookNotice">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="author" column="author"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <sql id="selectNoticeVO">
+        select * from book_notice
+    </sql>
+
+    <select id="selectAll" parameterType="BookNotice" resultMap="NoticeResult">
+        <include refid="selectNoticeVO"></include>
+            where del_flag='0'
+        <if test="id !=null and id!=''">and id=#{id}</if>
+        <if test="title!=null and title!=''">and title=#{title}</if>
+        <if test="author !=null and author !=''">and author=#{author}</if>
+    </select>
+
+    <select id="findNoticeById" parameterType="BookNotice" resultMap="NoticeResult">
+        <include refid="selectNoticeVO"></include>
+            where id=#{id}
+    </select>
+
+    <insert id="insertAll" parameterType="BookNotice">
+        insert into book_notice
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="title!=null">title,</if>
+                <if test="author!=''">author,</if>
+                <if test="content!=null">content,</if>
+                <if test="createTime !=null">create_time</if>
+            </trim>
+            <trim prefix="values(" suffix=")" suffixOverrides=",">
+               <if test="title!=null">#{title},</if>
+               <if test="author!=''">#{author},</if>
+               <if test="content!=null">#{content},</if>
+                <if test="createTime !=null">#{createTime}</if>
+            </trim>
+    </insert>
+
+    <update id="updateNotice" parameterType="BookNotice">
+        update book_notice
+            <trim prefix="set" suffixOverrides=",">
+                <if test="title!=null">title=#{title},</if>
+                <if test="author!=null">author=#{author},</if>
+                <if test="content!=null">content=#{content},</if>
+            </trim>
+           where id=#{id}
+    </update>
+
+    <update id="deleteNoticeById" parameterType="Long">
+        update book_notice set del_flag='1' where id=#{id}
+    </update>
+
+</mapper>
